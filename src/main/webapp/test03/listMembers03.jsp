@@ -9,7 +9,7 @@
 </head>
 <%-- ${memberLists } --%>
 <body>
-	<!-- 회원 목록 페이지 -->
+	<h1 align="center">회원 목록 페이지</h1><br>
 	<table align="center" border="1">
 		<tr align="center" bgcolor="green">
 			<td width="7%">아이디</td>
@@ -18,6 +18,7 @@
 			<td width="7%">이메일</td>
 			<td width="7%">가입일</td>
 			<td width="7%">수정</td>
+			<td width="7%">삭제</td>
 		</tr>
 
 
@@ -28,12 +29,13 @@
 				<td>${member.name }</td>
 				<td>${member.email }</td>
 				<td>${member.joinDate }</td>
-				<td><a href="http://localhost:8080/pro17/mem/addMember.do?">수정</a></td>
+				<td><a href="http://localhost:8080/pro17/mem3/modMemberForm.do?id=${member.id}">수정</a></td>
+				<td><a href="http://localhost:8080/pro17/mem3/delMember.do?id=${member.id}">삭제</a></td>
 			</tr>
 		</c:forEach>
 	</table>
 
-	<a href="./test01/memberForm.jsp">회원추가</a>
+	<a href="http://localhost:8080/pro17/test03/memberForm03.jsp"><p align="center">회원추가</p></a>
 
 
 </body>

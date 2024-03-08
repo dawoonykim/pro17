@@ -1,4 +1,4 @@
-package sec01.ex02;
+package sec02.ex01;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/mem/*")
+@WebServlet(urlPatterns = "/mem2/*")
 public class MemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class MemberController extends HttpServlet {
 		
 		String nextPage = null; // 컨트롤에서 지정한 다음 페이지
 
-		if (action == null || action.equals("/listMembers.do") || action.equals("/")) {
+		if (action == null || action.equals("/listMembers02.do") || action.equals("/")) {
 			// 회원 가져옴
 			List<MemberVO> memberLists = dao.listMembers();
 			System.out.println(memberLists);
@@ -61,8 +61,29 @@ public class MemberController extends HttpServlet {
 			// 보내야함(RequestDispatcher)
 			request.setAttribute("memberLists", memberLists);
 
-			nextPage = "/test01/listMembers.jsp";
+			nextPage = "/test02/listMembers02.jsp";
+		}else if(action.equals("/addMember.do")) {
+			System.out.println("회원 추가 메소드");
+			String id=request.getParameter("id");
+			String pwd=request.getParameter("pwd");
+			String name=request.getParameter("name");
+			String email=request.getParameter("email");
+			
+			MemberVO vo=new MemberVO(id, pwd, name, email);
+			dao.addMember(vo);
+			
+			nextPage = "/test02/listMembers02.jsp";
+		}else if(action.equals("/modMber.do")) {
+			String id=request.getParameter("id");
+//			MemberVO memInfo=dao.findMember(id);
+//			request.setAttribute("memInfo", memInfo);
+			nextPage = "/test03/modMemberForm.jsp";
+		}else {
+			List<MemberVO> memberLists = dao.listMembers();
+			request.setAttribute("memberLists", memberLists);
+			nextPage = "/test02/listMembers02.jsp";
 		}
+		
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);

@@ -28,12 +28,12 @@
 				<td>${member.name }</td>
 				<td>${member.email }</td>
 				<td>${member.joinDate }</td>
-				<td><a href="http://localhost:8080/pro17/mem/addMember.do?">수정</a></td>
+				<td><a href="http://localhost:8080/pro17/mem2/addMember.do?">수정</a></td>
 			</tr>
 		</c:forEach>
 	</table>
 
-	<a href="./test01/memberForm.jsp">회원추가</a>
+	<a href="http://localhost:8080/pro17/test02/memberForm02.jsp">회원추가</a>
 
 
 </body>

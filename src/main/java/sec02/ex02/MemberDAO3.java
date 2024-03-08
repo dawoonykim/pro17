@@ -1,4 +1,4 @@
-package sec01.ex02;
+package sec02.ex02;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -17,17 +17,17 @@ import org.apache.jasper.tagplugins.jstl.core.Catch;
 import oracle.jdbc.internal.ObjectDataFactory;
 import oracle.sql.ARRAY;
 
-public class MemberDAO {
+public class MemberDAO3 {
 
 	private DataSource dataFactory;
 	private PreparedStatement pstmt;
 	private Connection conn;
 	// MemberDAO 객체 초기화(생성자)시에 위 정보를 불러오게 해라 - JNDI
 
-	public MemberDAO() {
+	public MemberDAO3() {
 		System.out.println("MemberDAO 객체 생성");
 		try {
-//			System.out.println("MemberDAO 객체 생성");
+			// System.out.println("MemberDAO 객체 생성");
 			Context ctx = new InitialContext();
 			Context enContext = (Context) ctx.lookup("java:/comp/env");
 			dataFactory = (DataSource) enContext.lookup("jdbc/oracle");
@@ -37,12 +37,12 @@ public class MemberDAO {
 	}
 
 	// 회원 목록 가져옴 (그 전에 연결)
-	public List<MemberVO> listMembers() {
-		List<MemberVO> list = new ArrayList<MemberVO>();
+	public List<MemberVO3> listMembers() {
+		List<MemberVO3> list = new ArrayList<MemberVO3>();
 		try {
 			conn = dataFactory.getConnection();
 			String sql = "select * from T_MEMBER order by joindate asc";
-//			ResultSet rs=pstmt.executeQuery();
+			// ResultSet rs=pstmt.executeQuery();
 			pstmt = conn.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery(sql);
 
@@ -54,7 +54,7 @@ public class MemberDAO {
 				Date joinDate = rs.getDate("joinDate");
 				System.out.println(id + " " + pwd + " " + name + " " + email + " " + joinDate);
 
-				MemberVO vo = new MemberVO();
+				MemberVO3 vo = new MemberVO3();
 				vo.setId(id);
 				vo.setPwd(pwd);
 				vo.setName(name);
@@ -84,7 +84,7 @@ public class MemberDAO {
 		return list;
 	}
 
-	public void addMember(MemberVO memberVO) {
+	public void addMember(MemberVO3 memberVO) {
 		try {
 			conn = dataFactory.getConnection();
 			String id = memberVO.getId();
@@ -103,8 +103,8 @@ public class MemberDAO {
 			pstmt.setString(4, email);
 			System.out.println(id + " " + pwd + " " + name + " " + email);
 
-//			int num = pstmt.executeUpdate();
-//			System.out.println(num + "명이 추가됨");
+			// int num = pstmt.executeUpdate();
+			// System.out.println(num + "명이 추가됨");
 
 			pstmt.executeUpdate();
 
@@ -140,6 +140,58 @@ public class MemberDAO {
 			pstmt.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public MemberVO3 findMember(String _id) {
+		System.out.println("수정할 id: " + _id);
+		MemberVO3 memInfo = null;
+		try {
+			conn = dataFactory.getConnection();
+			String query = "select * from t_member where id=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, _id);
+			// System.out.println(query);
+			ResultSet rs = pstmt.executeQuery();
+
+			rs.next();
+			String id = rs.getString("id");
+			String pwd = rs.getString("pwd");
+			String name = rs.getString("name");
+			String email = rs.getString("email");
+			Date joinDate = rs.getDate("joinDate");
+
+			memInfo = new MemberVO3(id, pwd, name, email, joinDate);
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return memInfo;
+	}
+
+	public void modMember(MemberVO3 vo3) {
+
+		System.out.println("수정할 객체: " + vo3.toString());
+		String id = vo3.getId();
+		String pwd = vo3.getPwd();
+		String name = vo3.getName();
+		String email = vo3.getEmail();
+
+		try {
+			conn = dataFactory.getConnection();
+			String query = "update t_member set pwd=?, name=?, email=? where id=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, pwd);
+			pstmt.setString(2, name);
+			pstmt.setString(3, email);
+			pstmt.setString(4, id);
+
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
